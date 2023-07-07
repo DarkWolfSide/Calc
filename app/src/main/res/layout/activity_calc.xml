@@ -23,7 +23,7 @@
         android:gravity="end"
         android:text=""
         android:textColor="@color/white"
-        android:textSize="30sp" />
+        android:textSize="45sp" />
 
     <TextView
         android:id="@+id/output"
@@ -32,7 +32,7 @@
         android:gravity="end"
         android:text="0"
         android:textColor="@color/green"
-        android:textSize="50sp" />
+        android:textSize="75sp" />
 
     </LinearLayout>
 

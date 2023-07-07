@@ -100,9 +100,35 @@ class MainActivity : AppCompatActivity() {
             inputTextView.text = input
         }
 
+        buttonPlus.setOnClickListener {
+            input += "+"
+            inputTextView.text = input
+        }
+        buttonMinus.setOnClickListener {
+            input += "-"
+            inputTextView.text = input
+        }
+        buttonMul.setOnClickListener {
+            input += "*"
+            inputTextView.text = input
+        }
+        buttonDiv.setOnClickListener {
+            input += "/"
+            inputTextView.text = input
+        }
+//        buttonPlusMinus.setOnClickListener {
+//            input += "-"
+//            inputTextView.text = input
+//        }
+        buttonPoint.setOnClickListener {
+            input += "."
+            inputTextView.text = input
+        }
+
         buttonClear.setOnClickListener {
+            input = ""
             inputTextView.text = ""
-            outputTextView.text = ""
+            outputTextView.text = "0"
         }
 
         buttonEquals.setOnClickListener {
