@@ -1,170 +1,89 @@
-package com.example.calc
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
-
+import com.example.calc.R
 class MainActivity : AppCompatActivity() {
-
     private lateinit var inputTextView: TextView
     private lateinit var outputTextView: TextView
-    private lateinit var buttonZero: Button
-    private lateinit var buttonOne: Button
-    private lateinit var buttonTwo: Button
-    private lateinit var buttonThree: Button
-    private lateinit var buttonFour: Button
-    private lateinit var buttonFive: Button
-    private lateinit var buttonSix: Button
-    private lateinit var buttonSeven: Button
-    private lateinit var buttonEight: Button
-    private lateinit var buttonNine: Button
-
-    private lateinit var buttonEquals: Button
-    private lateinit var buttonPlusMinus: Button
-    private lateinit var buttonPlus: Button
-    private lateinit var buttonMinus: Button
-    private lateinit var buttonMul: Button
-    private lateinit var buttonDiv: Button
-    private lateinit var buttonPoint: Button
-    private lateinit var buttonClear: Button
-
+    private lateinit var inputEditText: EditText
+    private lateinit var calculateButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calc)
-
+        setContentView(R.layout.activity_text)
         inputTextView = findViewById(R.id.input)
         outputTextView = findViewById(R.id.output)
-
-        buttonZero = findViewById(R.id.zero)
-        buttonOne = findViewById(R.id.one)
-        buttonTwo = findViewById(R.id.two)
-        buttonThree = findViewById(R.id.three)
-        buttonFour = findViewById(R.id.four)
-        buttonFive = findViewById(R.id.five)
-        buttonSix = findViewById(R.id.six)
-        buttonSeven = findViewById(R.id.seven)
-        buttonEight = findViewById(R.id.eight)
-        buttonNine = findViewById(R.id.nine)
-
-        buttonEquals = findViewById(R.id.equals)
-        buttonPlusMinus = findViewById(R.id.plusminus)
-        buttonPlus = findViewById(R.id.plus)
-        buttonMinus = findViewById(R.id.min)
-        buttonMul = findViewById(R.id.mul)
-        buttonDiv = findViewById(R.id.div)
-        buttonPoint = findViewById(R.id.point)
-        buttonClear = findViewById(R.id.clear)
-
-        var input: String = ""
-        var result: Double = 0.0
-
-        buttonZero.setOnClickListener {
-            input += "0"
-            inputTextView.text = input
+        inputEditText = findViewById(R.id.inputEditText)
+        calculateButton = findViewById(R.id.calculateButton)
+        calculateButton.setOnClickListener {
+            val inputExpression = inputEditText.text.toString().trim()
+            val result = evaluateExpression(inputExpression)
+            outputTextView.text = result
         }
-        buttonOne.setOnClickListener {
-            input += "1"
-            inputTextView.text = input
-        }
-        buttonTwo.setOnClickListener {
-            input += "2"
-            inputTextView.text = input
-        }
-        buttonThree.setOnClickListener {
-            input += "3"
-            inputTextView.text = input
-        }
-        buttonFour.setOnClickListener {
-            input += "4"
-            inputTextView.text = input
-        }
-        buttonFive.setOnClickListener {
-            input += "5"
-            inputTextView.text = input
-        }
-        buttonSix.setOnClickListener {
-            input += "6"
-            inputTextView.text = input
-        }
-        buttonSeven.setOnClickListener {
-            input += "7"
-            inputTextView.text = input
-        }
-        buttonEight.setOnClickListener {
-            input += "8"
-            inputTextView.text = input
-        }
-        buttonNine.setOnClickListener {
-            input += "9"
-            inputTextView.text = input
-        }
-
-        buttonPlus.setOnClickListener {
-            input += "+"
-            inputTextView.text = input
-        }
-        buttonMinus.setOnClickListener {
-            input += "-"
-            inputTextView.text = input
-        }
-        buttonMul.setOnClickListener {
-            input += "*"
-            inputTextView.text = input
-        }
-        buttonDiv.setOnClickListener {
-            input += "/"
-            inputTextView.text = input
-        }
-//        buttonPlusMinus.setOnClickListener {
-//            input += "-"
-//            inputTextView.text = input
-//        }
-        buttonPoint.setOnClickListener {
-            input += "."
-            inputTextView.text = input
-        }
-
-        buttonClear.setOnClickListener {
-            input = ""
-            inputTextView.text = ""
-            outputTextView.text = "0"
-        }
-
-        buttonEquals.setOnClickListener {
-            try {
-                result = evaluateExpression(input)
-                // Display the result
-                outputTextView.text = result.toString()
-            } catch (e: Exception) {
-                outputTextView.text = "Error"
-            }
-        }
-
     }
     private fun getInputExpression(): String {
-        return "${inputTextView.text}"
+        return inputTextView.text.toString().replace(" ", "")
     }
-
-    private fun evaluateExpression(expression: String): Double {
-        val terms = expression.split(" ")
-        var result = 0.0
-        var operator = "+"
-        for (term in terms) {
-            when (term) {
-                "+" -> operator = "+"
-                "-" -> operator = "-"
-                else -> {
-                    val value = term.toDouble()
-                    if (operator == "+") {
-                        result += value
-                    } else if (operator == "-") {
-                        result -= value
-                    }
+    private fun evaluateExpression(expression: String): String {
+        val operators = arrayOf("+", "-", "*", "/")
+        val expressionParts = mutableListOf<String>()
+        var currentNumber = ""
+        for (char in expression) {
+            if (char.isDigit() || char == '.') {
+                currentNumber += char
+            } else if (char.toString() in operators) {
+                if (currentNumber.isNotEmpty()) {
+                    expressionParts.add(currentNumber)
+                    currentNumber = ""
                 }
+                expressionParts.add(char.toString())
             }
         }
-        return result
+        if (currentNumber.isNotEmpty()) {
+            expressionParts.add(currentNumber)
+        }
+        val precedence = mapOf("+" to 1, "-" to 1, "*" to 2, "/" to 2)
+        val operandStack = mutableListOf<Double>()
+        val operatorStack = mutableListOf<String>()
+        for (term in expressionParts) {
+            if (term.isOperator()) {
+                while (operatorStack.isNotEmpty() && precedence[operatorStack.last()]!! >= precedence[term]!!) {
+                    val value2 = operandStack.removeLast()
+                    val value1 = operandStack.removeLast()
+                    val operator = operatorStack.removeLast()
+                    val result = performOperation(value1, value2, operator)
+                    operandStack.add(result)
+                }
+                operatorStack.add(term)
+            } else {
+                operandStack.add(term.toDouble())
+            }
+        }
+        while (operatorStack.isNotEmpty()) {
+            val value2 = operandStack.removeLast()
+            val value1 = operandStack.removeLast()
+            val operator = operatorStack.removeLast()
+            val result = performOperation(value1, value2, operator)
+            operandStack.add(result)
+        }
+        val result = operandStack.first()
+        return if (result % 1 == 0.0) {
+            result.toInt().toString()
+        } else {
+            result.toString()
+        }
     }
-
+    private fun performOperation(value1: Double, value2: Double, operator: String): Double {
+        return when (operator) {
+            "+" -> value1 + value2
+            "-" -> value1 - value2
+            "*" -> value1 * value2
+            "/" -> value1 / value2
+            else -> throw IllegalArgumentException("Invalid operator: $operator")
+        }
+    }
+    private fun String.isOperator(): Boolean {
+        return this in arrayOf("+", "-", "*", "/")
+    }
 }
