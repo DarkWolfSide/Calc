@@ -1,8 +1,7 @@
+package com.example.calc
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.calc.ButtonFragment
-import com.example.calc.DisplayFragment
-import com.example.calc.R
 
 class MainActivity : AppCompatActivity(), ButtonFragment.OnButtonClickListener {
 
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity(), ButtonFragment.OnButtonClickListener {
                 }
             }
             else -> {
-                val updatedText = currentText + buttonText + " "
+                val updatedText = "$currentText$buttonText "
                 displayFragment.setInputText(updatedText)
             }
         }
