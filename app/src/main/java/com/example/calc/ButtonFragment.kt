@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 
+
 class ButtonFragment : Fragment() {
+
     private lateinit var buttonClickListener: OnButtonClickListener
 
     override fun onAttach(context: Context) {
@@ -51,129 +52,58 @@ class ButtonFragment : Fragment() {
 
         val buttonEquals: Button = view.findViewById(R.id.equals)
 
-        val displayFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.display_container) as? DisplayFragment
-        val inputTextView: TextView? = displayFragment?.view?.findViewById(R.id.input)
-
-        val outputTextView: TextView = requireActivity().findViewById(R.id.output)
-
-        var input = ""
-
         buttonZero.setOnClickListener {
-            if (inputTextView?.text?.isNotEmpty() == true && inputTextView.text != "0 ") {
-                input += "0 "
-            } else {
-                input = "0 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("0")
         }
-
         buttonOne.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "1 "
-            } else {
-                input += "1 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("1")
         }
         buttonTwo.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "2 "
-            } else {
-                input += "2 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("2")
         }
         buttonThree.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "3 "
-            } else {
-                input += "3 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("3")
         }
         buttonFour.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "4 "
-            } else {
-                input += "4 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("4")
         }
         buttonFive.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "5 "
-            } else {
-                input += "5 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("5")
         }
         buttonSix.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "6 "
-            } else {
-                input += "6 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("6")
         }
         buttonSeven.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "7 "
-            } else {
-                input += "7 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("7")
         }
         buttonEight.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "8 "
-            } else {
-                input += "8 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("8")
         }
         buttonNine.setOnClickListener {
-            if (inputTextView?.text == "0 ") {
-                input = "9 "
-            } else {
-                input += "9 "
-            }
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("9")
         }
 
         buttonBack.setOnClickListener {
-            if (input.isNotEmpty()) {
-                input = input.dropLast(2)
-                inputTextView?.text = input
-                if (input.isNotEmpty()) {
-                    outputTextView.text = "0"
-                }
-            }
+            buttonClickListener.onButtonClick("Back")
         }
         buttonPlus.setOnClickListener {
-            input += "+ "
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("+")
         }
         buttonMinus.setOnClickListener {
-            input += "- "
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("-")
         }
         buttonMul.setOnClickListener {
-            input += "* "
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("*")
         }
         buttonDiv.setOnClickListener {
-            input += "/ "
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick("/")
         }
         buttonPoint.setOnClickListener {
-            input += "."
-            inputTextView?.text = input
+            buttonClickListener.onButtonClick(".")
         }
 
         buttonClear.setOnClickListener {
-            input = ""
-            inputTextView?.text = ""
-            outputTextView.text = "0"
+            buttonClickListener.onButtonClick("Clear")
         }
 
         buttonEquals.setOnClickListener {
